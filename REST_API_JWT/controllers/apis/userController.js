@@ -1,18 +1,19 @@
 
 const express = require('express');
 const userService = require('../../services/users/userService');
+const authGuard = require('../../middlewares/authgaurd');
 let userControllerRouter = express.Router();
 
-userControllerRouter.get('/', userService.getUsers);
-userControllerRouter.post('/', userService.createUser);
+//userControllerRouter.get('/', userService.getUsers);
+//userControllerRouter.post('/', userService.createUser);
 
 
-userControllerRouter.get('/:id', userService.getUserById);
+userControllerRouter.get('/:id', authGuard.authClientToken ,userService.getUserByIdOREmail);
 
 
-userControllerRouter.put('/:id', userService.updateUser);
+//userControllerRouter.put('/:id', userService.updateUser);
 
-userControllerRouter.delete('/:id', userService.deleteUser);
+//userControllerRouter.delete('/:id', userService.deleteUser);
 
 
 

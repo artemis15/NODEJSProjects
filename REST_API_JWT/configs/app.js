@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const expressValidator = require('express-validator');
 let routes = require("../routes/routes");
 let server = express();
 
@@ -11,6 +12,7 @@ let create = (config, db) => {
 
   // add middleware to parse the json
   server.use(bodyParser.json());
+  server.use(expressValidator());
   server.use(
     bodyParser.urlencoded({
       extended: false

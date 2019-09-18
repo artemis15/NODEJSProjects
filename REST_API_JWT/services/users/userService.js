@@ -97,7 +97,7 @@ const createUser = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
     try {
-        let user = await User.findById(req.params.id);
+        let user = await userModel.findById(req.params.id);
         if (user) {
             return res.status(200).json({
                 'message': `user with id ${req.params.id} fetched successfully`,
@@ -147,7 +147,7 @@ const updateUser = async (req, res, next) => {
         }
 
 
-        let isUserExists = await User.findById(userId);
+        let isUserExists = await userModel.findById(userId);
 
         if (!isUserExists) {
             return res.status(404).json({
@@ -161,7 +161,7 @@ const updateUser = async (req, res, next) => {
             email: email
         }
 
-        let updateUser = await User.findByIdAndUpdate(userId, temp, {
+        let updateUser = await userModel.findByIdAndUpdate(userId, temp, {
             new: true
         });
 
@@ -184,7 +184,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
     try {
-        let user = await User.findByIdAndRemove(req.params.id);
+        let user = await userModel.findByIdAndRemove(req.params.id);
         if (user) {
             return res.status(204).json({
                 'message': `user with id ${req.params.id} deleted successfully`
@@ -205,11 +205,53 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+const getUserByIdOREmail = async(req,res,next) => {
+    try {
+        //let user = await userModel.findById(req.params.id);
+        
+        let userEmail = await userModel.find({email:req.params.id});
+        
+        
+        //console.log(userEmail+"--"+user);
+        if (userEmail.length !=0) {
+            return res.status(200).json({
+                'message': `user with email ${req.params.id} fetched successfully`,
+                'data': userEmail
+            });
+        }
+        else {
+            let user = await userModel.findById(req.params.id);
+            if(user.length !=0)
+            {
+                return res.status(200).json({
+                    'message': `user with id ${req.params.id} fetched successfully`,
+                    'data': user
+                });
+            }
+            return res.status(404).json({
+                'code': 'BAD_REQUEST_ERROR',
+                'description': 'No users found in the system'
+            });
+            
+        }
+
+        
+
+    } catch (error) {
+
+        return res.status(500).json({
+            "err":error,
+            'code': 'SERVER_ERROR_EMAIL',
+            'description': 'something went wrong, Please try again'
+        });
+    }
+}
+
 module.exports = {
     getUsers: getUsers,
     createUser: createUser,
     getUserById: getUserById,
     updateUser: updateUser,
-    deleteUser: deleteUser
-
+    deleteUser: deleteUser,
+    getUserByIdOREmail :getUserByIdOREmail
 };
