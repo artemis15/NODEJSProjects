@@ -8,7 +8,7 @@ const userModel = require("../../models/user");
 3)  createUser
 4)  updateUser
 5)  deleteUser
-
+6) getUserByIdOREmail
 */
 
 const getUsers = async (req, res, next) => {
